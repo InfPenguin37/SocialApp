@@ -1,4 +1,5 @@
 const express = require('express')
+const Post = require('../models/postModel')
 
 const router = express.Router()
 
@@ -13,8 +14,15 @@ router.get('/:postid', (req, res) => {
 })
 
 //CREATE a new post
-router.post('/', (req, res) => {
-    res.json({ mssg: 'POST a new post' })
+router.post('/', async(req, res) => {
+    const { title, body } = req.body
+
+    try {
+        const post = await Post.create({ title, body })
+        res.status(200).json(post)
+    } catch (error) {
+        res.status(400).json({ error: error.message })
+    }
 })
 
 //UPDATE a specific post
