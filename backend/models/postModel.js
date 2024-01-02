@@ -10,6 +10,11 @@ const postSchema = new Schema({
     body: {
         type: String,
         required: true
+    },
+    userid: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'userModel',
+        required: true
     }
 }, { timestamps: true })
 

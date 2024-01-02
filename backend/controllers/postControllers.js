@@ -1,4 +1,5 @@
 const Post = require('../models/postModel')
+const User = require('../models/userModel')
 const mongoose = require('mongoose')
 
 //GET all posts
@@ -25,10 +26,14 @@ const getPost = async(req, res) => {
 
 //CREATE a new post
 const createPost = async(req, res) => {
-    const { title, body } = req.body
+    const { title, body, userid } = req.body
+    const userExists = await User.exists({ _id: userid });
 
+    if (!userExists) {
+        return res.status(404).json({ error: 'Invalid user making post' })
+    }
     try {
-        const post = await Post.create({ title, body })
+        const post = await Post.create({ title, body, userid })
         res.status(200).json(post)
     } catch (error) {
         res.status(400).json({ error: error.message })
